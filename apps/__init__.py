@@ -11,6 +11,12 @@ def register_db(app):
     db.init_app(app)
 
 
+# 蓝图注册函数
+def register_bp(app):
+    from apps.cms import cms_bp
+    app.register_blueprint(cms_bp)
+
+
 def create_app():
     app = Flask(__name__)
     # 配置app的一些跟数据库相关的配置项
@@ -18,5 +24,8 @@ def create_app():
 
     # 数据库对象的app绑定
     register_db(app)
+
+    # 把蓝图对象跟app进行绑定
+    register_bp(app)
 
     return app
