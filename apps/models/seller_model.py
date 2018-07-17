@@ -1,9 +1,11 @@
+from flask_login.mixins import UserMixin
+
 from apps.models.base import BaseModel, db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 # 商家的用户信息表
-class SellerUser(BaseModel):
+class SellerUser(BaseModel, UserMixin):
     username = db.Column(db.String(32), unique=True, nullable=False)
     _password = db.Column("password", db.String(128))
 
