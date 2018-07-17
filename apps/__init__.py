@@ -24,6 +24,14 @@ def register_bs(app):
     Bootstrap(app)
 
 
+# 登陆插件的注册
+def register_lm(app):
+    from apps.forms.login_man import login_manager
+    login_manager.init_app(app)
+
+    login_manager.login_view = 'cms.login'
+
+
 def create_app():
     app = Flask(__name__)
     # 配置app的一些跟数据库相关的配置项
@@ -34,6 +42,9 @@ def create_app():
 
     # 注册bs
     register_bs(app)
+
+    # 注册login manager插件
+    register_lm(app)
 
     # 把蓝图对象跟app进行绑定
     register_bp(app)

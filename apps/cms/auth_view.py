@@ -1,4 +1,5 @@
 from flask import render_template, request, jsonify, session, redirect, url_for
+from flask_login import login_user, logout_user, current_user, login_required
 
 from apps.cms import cms_bp
 from apps.forms.seller_form import SellerRegisterForm, SellerLoginForm
@@ -8,6 +9,10 @@ from apps.models.seller_model import SellerUser, db
 # 创建首页
 @cms_bp.route('/', endpoint='index')
 def seller_index():
+    if current_user.is_authenticated:
+        print("===========", current_user.username)
+    else:
+        print("+++++++++++++")
     return render_template('cms/index.html')
 
 
@@ -43,14 +48,24 @@ def seller_login():
         user = SellerUser.query.filter_by(username=login_form.username.data).first()
         if user and user.check_password(login_form.password.data):
             # 把当前请求对应的session空间，进行了赋值操作
-            session['is_login'] = True
-            session['u_name'] = user.username
-            return redirect(url_for('cms.index'))
+            login_user(user)
+            # 判断是否传递了next的参数
+            next_page = request.args.get('next')
+            if not next_page or not next_page.startswith('/'):
+                next_page = url_for('cms.index')
+            return redirect(next_page)
         login_form.password.errors = ['用户名或密码错误']
     return render_template('cms/login.html', form=login_form)
 
 
 @cms_bp.route('/logout/', endpoint='logout')
 def seller_logout():
-    session.clear()
+    logout_user()
     return redirect(url_for('cms.index'))
+
+
+# 商家资料的视图函数
+@cms_bp.route('/shop/', endpoint='shop')
+@login_required                             # 必须放置在视图函数最近地方
+def seller_shop():
+    return "在商家的资料里..."
