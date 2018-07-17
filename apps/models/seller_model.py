@@ -1,4 +1,5 @@
 from apps.models.base import BaseModel, db
+from werkzeug.security import generate_password_hash
 
 
 # 商家的用户信息表
@@ -12,7 +13,7 @@ class SellerUser(BaseModel):
 
     @password.setter
     def password(self, arg):
-        self._password = arg
+        self._password = generate_password_hash(arg)
 
     def __repr__(self):
         return "<User {}>".format(self.username)
