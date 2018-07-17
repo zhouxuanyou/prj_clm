@@ -26,7 +26,7 @@ def seller_register():
             user.set_attrs(reg.data)
             db.session.add(user)
             db.session.commit()
-            return "success"
+            return redirect(url_for('cms.index'))
         # 一旦有错误，他自动在reg.errors里进行绑定
         return render_template('cms/register.html', form=reg)
 
