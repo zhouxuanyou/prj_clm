@@ -1,7 +1,7 @@
-from flask import render_template, request
+from flask import render_template, request, jsonify
 
 from apps.cms import cms_bp
-from apps.forms.seller_form import SellerRegisterForm
+from apps.forms.seller_form import SellerRegisterForm, SellerLoginForm
 from apps.models.seller_model import SellerUser, db
 
 
@@ -29,3 +29,20 @@ def seller_register():
             return "success"
         # 一旦有错误，他自动在reg.errors里进行绑定
         return render_template('cms/register.html', form=reg)
+
+
+# 实现用户登陆视图
+@cms_bp.route('/login/', endpoint='login', methods=['GET', 'POST'])
+def seller_login():
+    # 当请求为POST
+    if request.method == 'POST':
+        # 先把用户请求的数据，交给验证层进行验证
+        login_form = SellerLoginForm(request.form)
+        if login_form.validate():
+            # 一旦验证通过，再进行密码校验
+            # 先通过用户名查找到用户的对象(记录)，在该记录下去访问password，和明文进行哈希的相等校验
+            user = SellerUser.query.filter_by(username=login_form.username.data).first()
+            if user and user.check_password(login_form.password.data):
+                return "success"
+            login_form.password.errors = ['用户名或密码错误']
+        return jsonify(login_form.errors)
