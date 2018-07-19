@@ -28,7 +28,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li {% if act == 0 %} class="active" {% endif %}><a href="{{ url_for('cms.shop') }}">商家资料</a></li>
-                    <li {% if act == 1 %} class="active" {% endif %}><a href="#">商家菜品</a></li>
+                    <li {% if act == 1 %} class="active" {% endif %}><a href="{{ url_for('cms.add_shop') }}">我要开店</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}

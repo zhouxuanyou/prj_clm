@@ -15,3 +15,4 @@ class BaseModel(db.Model):
                 setattr(self, k, v)
 
 from . import seller_model
+from . import shop_model
