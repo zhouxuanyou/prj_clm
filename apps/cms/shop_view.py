@@ -1,9 +1,10 @@
-from flask import request, render_template, redirect, url_for
+from flask import request, render_template, redirect, url_for, abort, Response
 from flask_login import current_user, login_required
 
 from apps.cms import cms_bp
 from apps.forms.shop_form import ShopBaseForm, ShopCateForm, FoodForm
 from apps.models.shop_model import SellerShop, db, MenuCategory, MenuFood
+
 
 ############################################################
 # 通用函数块
@@ -13,7 +14,8 @@ from apps.models.shop_model import SellerShop, db, MenuCategory, MenuFood
 def check_shop_id(shop_id):
     shop = SellerShop.query.filter_by(id=shop_id, seller_id=current_user.id).first()
     if not shop:
-        return redirect(url_for('cms.index'))
+        abort(redirect(url_for('cms.index')))
+        # return redirect(url_for('cms.index'))
     return shop
 
 
@@ -46,7 +48,7 @@ def add_cate(shop_id):
     if request.method == 'POST' and cate_form.validate():
         cate = MenuCategory()
         cate.set_attrs(cate_form.data)
-        cate.shop = shop            # shop_id = shop.id
+        cate.shop = shop  # shop_id = shop.id
         db.session.add(cate)
         db.session.commit()
         return redirect(url_for('cms.index'))
@@ -62,14 +64,49 @@ def add_food(shop_id):
     if request.method == 'POST' and food_form.validate():
         food = MenuFood()
         food.set_attrs(food_form.data)
-        food.shop = shop            # shop_id = shop.id
+        food.shop = shop  # shop_id = shop.id
         db.session.add(food)
         db.session.commit()
         return redirect(url_for('cms.index'))
     return render_template('cms/add_food.html', form=food_form, shop=shop)
 
+
+#############################################################
+# 资源的更新
+#############################################################
+# 店铺的信息更新
+@cms_bp.route('/update_shop/<int:shop_id>/', endpoint='update_shop', methods=['GET', 'POST'])
+@login_required
+def update_shop(shop_id):
+    shop = check_shop_id(shop_id)
+    if request.method == 'GET':
+        shop_form = ShopBaseForm(data=dict(shop))
+    elif request.method == 'POST':
+        shop_form = ShopBaseForm(request.form)
+        if shop_form.validate():
+            shop.set_attrs(shop_form.data)
+            db.session.add(shop)
+            db.session.commit()
+            return redirect(url_for('cms.index'))
+    return render_template('cms/update_shop.html', form=shop_form)
+
+
 #############################################################
 # 资源的查看
 #############################################################
-# 查看分类
+@cms_bp.route('/show_food/<int:shop_id>/', endpoint='show_food', methods=['GET'])
+@login_required
+def show_food(shop_id):
+    shop = check_shop_id(shop_id)
+    cates = shop.categories
+    return render_template('cms/show_foods.html', cates=cates, shop=shop)
 
+
+@cms_bp.route('/show_cate/<int:shop_id>/', endpoint='show_cate', methods=['GET'])
+@login_required
+def show_cate(shop_id):
+    shop = check_shop_id(shop_id)
+    cates = shop.categories
+    result = [{'name': cate.name, 'total': len(cate.foods)}
+              for cate in cates]
+    return render_template('cms/show_cates.html', cates=result, shop=shop)

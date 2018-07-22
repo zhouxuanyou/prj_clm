@@ -27,8 +27,14 @@
                     <th>{{ sp.shop_rating }}</th>
                     <th>{{ sp.start_cost }}</th>
                     <th>{{ sp.send_cost }}</th>
-                    <th><a href="{{ url_for('cms.add_cate', shop_id=sp.id) }}">添加分类</a></th>
-                    <th><a href="{{ url_for('cms.add_food', shop_id=sp.id) }}">添加菜品</a></th>
+                    <th>
+                        <a href="{{ url_for('cms.add_cate', shop_id=sp.id) }}">添加</a>
+                        <a href="{{ url_for('cms.show_cate', shop_id=sp.id) }}">查看</a>
+                    </th>
+                    <th>
+                        <a href="{{ url_for('cms.add_food', shop_id=sp.id) }}">添加</a>
+                        <a href="{{ url_for('cms.show_food', shop_id=sp.id) }}">查看</a>
+                    </th>
                 </tr>
             {% endfor %}
             </tbody>

@@ -1,0 +1,49 @@
+{% extends 'cms/base.html' %}
+
+{% block content %}
+<div class="container">
+        <h1 class="text-center">菜品明细</h1>
+        <hr>
+        {% if current_user.is_authenticated %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong class="text-danger">{{ shop.shop_name }}</strong> 的菜单清单：
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>菜品名称</th>
+                        <th>菜品价钱</th>
+                        <th>菜品销量</th>
+                        <th>菜品评分</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for cate in cates %}
+                        <tr>
+                            <th>{{ cate.name }}</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        {% for item in cate.foods %}
+                            <tr>
+                                <th>{{ loop.index }}</th>
+                                <th>{{ item.food_name }}</th>
+                                <th>{{ item.food_price }}</th>
+                                <th>{{ item.month_sales }}</th>
+                                <th>{{ item.rating_count }}</th>
+                            </tr>
+                        {% endfor %}
+
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>您还没有创建菜品分类，先创建菜品分类。</p>
+        {% endif %}
+{% endblock %}

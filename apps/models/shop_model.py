@@ -34,6 +34,9 @@ class SellerShop(BaseModel):
     # 优惠信息
     discount = db.Column(db.String(210), default='')
 
+    def keys(self):
+        return "shop_name", "is_ontime", "is_ontime", "is_bird", "is_bao", "is_fp", "is_zun", "start_cost", "send_cost", "notice", "discount"
+
     def __repr__(self):
         return '<Shop {} --- {}>'.format(self.shop_name, self.seller)
 
@@ -66,7 +69,7 @@ class MenuFood(BaseModel):
     shop_id = db.Column(db.Integer, db.ForeignKey('seller_shop.id'))
     # 归属分类
     category_id = db.Column(db.Integer, db.ForeignKey('menu_category.id'))
-    cates = db.relationship('MenuCategory', backref='foods')    # 添加一条关系
+    cates = db.relationship('MenuCategory', backref='foods')  # 添加一条关系
     # 菜品价格
     food_price = db.Column(db.DECIMAL(6, 2), default=0.0)
     # 菜品描述
