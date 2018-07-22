@@ -9,11 +9,11 @@ from apps.models.seller_model import SellerUser, db
 # 创建首页
 @cms_bp.route('/', endpoint='index')
 def seller_index():
+    shop = []
     if current_user.is_authenticated:
-        print("===========", current_user.username)
-    else:
-        print("+++++++++++++")
-    return render_template('cms/index.html')
+        shop = current_user.shop
+        print(shop)
+    return render_template('cms/index.html', shop=shop)
 
 
 # 创建注册页面

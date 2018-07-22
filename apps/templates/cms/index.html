@@ -2,10 +2,39 @@
 
 {% block content %}
     <div class="container text-center">
-        {% if current_user.is_authenticated %}
-            <h1>欢迎{{ current_user.username }}</h1>
-        {% else %}
-            <h1>赶快加入我们吧！</h1>
-        {% endif %}
-    </div>
+    {% if current_user.is_authenticated %}
+        <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong class="text-danger">{{ current_user.username }}</strong> 的店铺：
+        </div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>店铺名称</th>
+                <th>店铺评分</th>
+                <th>起送价</th>
+                <th>运费</th>
+                <th>分类</th>
+                <th>菜品</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sp in shop %}
+                <tr>
+                    <th>{{ loop.index }}</th>
+                    <th>{{ sp.shop_name }}</th>
+                    <th>{{ sp.shop_rating }}</th>
+                    <th>{{ sp.start_cost }}</th>
+                    <th>{{ sp.send_cost }}</th>
+                    <th><a href="{{ url_for('cms.add_cate', shop_id=sp.id) }}">添加分类</a></th>
+                    <th><a href="{{ url_for('cms.add_food', shop_id=sp.id) }}">添加菜品</a></th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h1>赶快加入我们吧！</h1>
+    {% endif %}
+</div>
 {% endblock %}
