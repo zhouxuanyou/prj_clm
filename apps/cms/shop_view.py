@@ -107,6 +107,9 @@ def show_food(shop_id):
 def show_cate(shop_id):
     shop = check_shop_id(shop_id)
     cates = shop.categories
-    result = [{'name': cate.name, 'total': len(cate.foods)}
+    result = [{'name': cate.name,
+               'total': len(cate.foods),
+               'all': '%.2f' %
+                      (sum([x.food_price for x in cate.foods]) / (len(cate.foods) if len(cate.foods) > 0 else 1))}
               for cate in cates]
     return render_template('cms/show_cates.html', cates=result, shop=shop)

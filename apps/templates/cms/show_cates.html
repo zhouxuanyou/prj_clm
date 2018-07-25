@@ -19,6 +19,7 @@
                         <th>序号</th>
                         <th>分类名称</th>
                         <th>菜品信息</th>
+                        <th>总价钱</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -27,6 +28,7 @@
                             <th>{{ loop.index }}</th>
                             <th>{{ cate.name }}</th>
                             <th>{{ cate.total }}</th>
+                            <th>{{ cate.all }}</th>
                         </tr>
                     {% endfor %}
                     </tbody>
