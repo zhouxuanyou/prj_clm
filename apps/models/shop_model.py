@@ -57,6 +57,9 @@ class MenuCategory(BaseModel):
     def __repr__(self):
         return "<MenuCate {}>".format(self.name)
 
+    def keys(self):
+        return "name", "description", "is_default"
+
 
 # 菜品数据模型
 # 菜品信息
@@ -85,3 +88,15 @@ class MenuFood(BaseModel):
 
     def __repr__(self):
         return "<Food: {}-{}>".format(self.food_name, self.food_price)
+
+
+# 购物车模型
+class CartModel(BaseModel):
+    user_id = db.Column(db.Integer, db.ForeignKey('buyer_user_model.id'))
+    # 菜品id
+    foods_id = db.Column(db.Integer, db.ForeignKey('menu_food.id'))
+    # 菜品数量
+    food_num = db.Column(db.Integer)
+
+    user = db.relationship('BuyerUserModel', backref='carts')
+

@@ -20,3 +20,4 @@ class BaseModel(db.Model):
 
 from . import seller_model
 from . import shop_model
+from . import buyer_model

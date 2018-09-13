@@ -11,3 +11,5 @@ SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 # 如果使用session，就必须配置秘钥
 SECRET_KEY = '$clm!'
+
+EXPIRES_TIME = 7 * 24 * 3600

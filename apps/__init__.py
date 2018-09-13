@@ -32,6 +32,7 @@ def register_lm(app):
     login_manager.login_view = 'cms.login'
 
 
+# 产生后台服务的app
 def create_app():
     app = Flask(__name__)
     # 配置app的一些跟数据库相关的配置项
@@ -48,5 +49,26 @@ def create_app():
 
     # 把蓝图对象跟app进行绑定
     register_bp(app)
+
+    return app
+
+
+# 注册API蓝图
+def register_api_bp(app):
+    from apps.apis import api_bp
+    app.register_blueprint(api_bp)
+
+
+# 产生一个client的app
+def create_api_app():
+    app = Flask(__name__, static_url_path='/c', static_folder='./client_web')
+
+    # 数据库配置
+    app.config.from_object('apps.private_conf')
+
+    # 注册数据库
+    register_db(app)
+
+    register_api_bp(app)
 
     return app
